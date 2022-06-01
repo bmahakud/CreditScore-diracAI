@@ -10,8 +10,10 @@
 
 
 ## Installations
-
-   - Keras Installation
+   - Python3 and virtual environment
+   - pip   
+   - Keras Installation (Ubuntu 20.04)
+     - sudo apt-get update && sudo apt-get upgrade
 
 
 
