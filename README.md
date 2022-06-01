@@ -2,3 +2,6 @@
 
 
 ## Prerequisites to start working on this project
+
+  1. [Machine Learning Course by Andrew Ng] (https://www.coursera.org/learn/machine-learning)
+     complete first 3 weeks of the course
