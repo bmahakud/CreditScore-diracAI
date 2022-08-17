@@ -6,17 +6,17 @@ from PIL import Image
 from scipy import ndimage
 import ROOT
 
-nCol =2
+nCol = 6
+
 
 #trainingDataFile = "TrainDataStLineDecimal.txt"
-
-trainingDataFile = "DataFiles/TrainData_v1.txt"
-
+trainingDataFile = "TrainData.txt"
 #trainingDataFile = "TrainDataStLine.txt" 
 #testDataFile = "TestDataStLine.txt"
-
 #trainingDataFile = "TrainData.txt"
 #testDataFile = "TestData.txt"
+
+
 
 
 
@@ -67,7 +67,12 @@ mTrain = Xtrain.shape[1]
 
 print ("Number of training examples: ",mTrain)
 Theta = np.random.rand(nCol,1);
+
+#Theta=np.array([[0.53635237],[0.34235451]])
+
 Theta=np.array(Theta,dtype=float);
+
+print ("Initial value of Theta: ", Theta)
 
 
 
@@ -91,18 +96,21 @@ def train(Xtrain, Ytrain, Theta, n_iterations,alpha):
     if (mTrain != mTrainFY):
         raise ValueError('There different number of training examples in X and Y')
 
-    histCost = ROOT.TH1F("histCost","histCost",n_iterations,0,n_iterations);
+    histCost = ROOT.TH1F("histCost","histCost",10000,0,10000);
     for iteration in range(1,n_iterations):
         hx = np.dot(Theta.T,Xtrain);
         dy = (hx - Ytrain)
         cost = AvgCost(Theta, Xtrain, Ytrain)
-        histCost.SetBinContent(iteration,cost)
+        if iteration % 10 == 0:
+            binNum=round(iteration/10);
+            print ("iteration: ", iteration, " : cost",cost)
+            histCost.SetBinContent(binNum,cost)
         Theta = Theta - (alpha/mTrain) * (np.dot(Xtrain , dy.T))
     return Theta, histCost
 
 
 
-Theta, histCost = train(Xtrain, Ytrain, Theta, n_iterations=10000, alpha=0.01);
+Theta, histCost = train(Xtrain, Ytrain, Theta, n_iterations=100000, alpha=0.05);
 
 
 print ("Fitted Theta: ", Theta)
@@ -140,16 +148,52 @@ def getCostVsThetaHist(nbin_theta0,theta0_start,theta0_end,nbin_theta1,theta1_st
 
 
 
-y_pred = np.dot(Theta.T,Xtrain)
+y_pred = np.dot(Theta.T,Xtrain);
 
-XtrainNew = np.delete(Xtrain, 0, 0)
+XtrainNew = np.delete(Xtrain, 0, 0);
 
-plt.scatter( XtrainNew.T, Ytrain.T, color='green')
+XtrainAttendance=np.array([Xtrain[1]]);
+XtrainAlertness=np.array([Xtrain[2]]);
+XtrainHomework=np.array([Xtrain[3]]);
+XtrainUnderstanding=np.array([Xtrain[4]]);
+XtrainPrevPerformance=np.array([Xtrain[5]]);
 
-plt.plot(XtrainNew.T, y_pred.T, color='red')
+print (np.array([Xtrain[1]]))
+#print ("Xtrain.shape: ", Xtrain.shape);
+#print ("XtrainAttendance: ", XtrainAttendance);
+#print ("XtrainAttendance.shape: ", XtrainAttendance.T.shape);
+
+
+#print ("y_pred.T.shape: ", y_pred.T.shape);
+
+
+#plt.scatter( XtrainAttendance.T, Ytrain.T, color='green');
+#plt.xlabel("Attendance")
+#plt.ylabel("Performance")
+#plt.show();
+#plt.savefig('AttendanceVsPerformanceProjection1D.png')
+
+
+
+
+#plt.scatter( XtrainHomework.T, Ytrain.T, color='green');
+#plt.xlabel("Homework")
+#plt.ylabel("Performance")
+#plt.show();
+#plt.savefig('HomeworkVsPerformanceProjection1D.png')
+
+
+
+
+#plt.plot(XtrainAttendance.T, y_pred.T, color='red')
 
 #plt.show();
-plt.savefig('StraightLinFitScratch5.png')
-#histCost.Draw();
+#plt.savefig('StraightLinFitScratchUncertAdded.png')
+
+
+
+histCost.Draw();
+
+
 
 

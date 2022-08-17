@@ -53,6 +53,8 @@ for i in range(3000):
     hAlertness.Fill(nvalue2);
     hHomework.Fill(nvalue3);
     Pvalue = round((nvalue1*0.4) + (nvalue2*0.2) +(0.4*nvalue3),3)
+
+
     h2DAlertAttendance.Fill(nvalue1,nvalue2);
 
     hPerformance.Fill(Pvalue);
